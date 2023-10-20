@@ -1,0 +1,464 @@
+\documentclass[final,20pt]{beamer}
+\mode<presentation>
+{
+	\usetheme{Goettingen}
+}
+
+
+\usepackage[orientation=landscape,size=a1,scale=1.1,debug]{beamerposter}
+\setbeamercolor{block body}{fg=black,bg=white} % Colors of the body of blocks
+\usepackage{lipsum} % for dummy text
+\usepackage{graphicx} % for dummy image
+\usepackage{tikz} % for tikzpicture
+\usepackage{pgfplots} % for plot
+\usepackage{tikz-cd}
+\usetikzlibrary{arrows,shapes,positioning}
+
+
+\title[]{\Huge Galois theorem for Commutative Algebras}
+\author[]{\large Animesh Renanse}
+\institute[]{\Large Department of Mathematics \& Statistics, IISER Kolkata}
+\date{DMS Foundation Day, 2023}
+
+
+\usepackage{amssymb,amsmath,amsthm}
+\usepackage{tikz-cd}
+\usepackage{quiver}
+
+
+
+
+
+
+
+
+
+\newcommand{\inv}[1]{#1^{-1}}
+\newcommand{\gen}[1]{\left \langle#1\right \rangle}
+\newcommand{\order}[1]{\left\vert #1 \right\vert}
+\newcommand{\image}[0]{\text{Im }}
+\newcommand{\kernel}[0]{\text{Ker }}
+\newcommand{\nsg}[0]{\trianglelefteq}
+\newcommand{\isomorph}{\cong}
+\newcommand{\End}[1]{\text{\textbf{End}}\left(#1\right)}
+\newcommand{\Auto}[2]{{\fontfamily{lmr}\selectfont 
+		\text{\textbf{Aut}}_{#1}{\left (#2\right )}
+}}
+\newcommand{\pset}{\mathbf{P}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\renewcommand{\qedsymbol}{\ensuremath{\blacksquare}}
+\newcommand{\rest}[2]{\left . #1\right \vert_{#2}}
+\newcommand{\Gal}[1]{{\fontfamily{lmss}\selectfont 
+		\text{\textbf{Gal}} \;#1
+}}
+\newcommand{\Fix}[1]{{\fontfamily{lmss}\selectfont 
+		\text{\textbf{{Fix}}} \left (#1\right )
+}}
+\newcommand{\Inter}[1]{ {\fontfamily{lmr}\selectfont 
+		\text{\textbf{{IntExt}}} \left [#1\right ]
+} }
+\newcommand{\abs}[1]{\left \vert #1 \right \vert}
+\newcommand{\tens}{\otimes}
+\newcommand{\intrs}{\cap}
+\newcommand{\union}{\cup}
+\newcommand{\Gel}[1]{{\fontfamily{lmss}\selectfont 
+		\text{\textbf{Gel}} \left (#1\right )
+}}
+
+
+
+%%Categories
+\newcommand{\cat}[1]{{\fontfamily{qpl}\selectfont 
+		\text{\rm \textbf{#1}}
+}}
+\newcommand{\opcat}[1]{{\fontfamily{qpl}\selectfont 
+		\text{\rm \textbf{#1}}^{\text{op}}
+}}
+\newcommand{\Set}{\mathcal{S}et}
+\newcommand{\Cat}{\mathcal{C}at}
+\newcommand{\homset}[3]{{\fontfamily{lmr}\selectfont 
+		\text{\rm Hom}_{#1}\left (#2,#3\right )
+}}
+\newcommand{\Splitf}[2]{{\fontfamily{lmr}\selectfont 
+		\cat{Split}_{#1}\left (#2\right )_{\text{Fin}}
+}}
+\newcommand{\Split}[2]{{\fontfamily{lmr}\selectfont 
+		\cat{\rm Split}_{#1}\left (#2\right )
+}}
+\newcommand{\id}{{\fontfamily{lmr}\selectfont 
+		\text{\rm id}
+}}
+\newcommand{\fin}{\text{\rm Fin}}
+\newcommand{\bunion}{\bigcup}
+\newcommand{\bintrs}{\bigcap}
+\newcommand{\dscrt}{\text{Dscrt}}
+\newcommand{\ob}[1]{\text{\emph{Ob}}\left (#1\right )}
+\newcommand{\ar}[1]{\text{\emph{Ar}}\left (#1\right )}
+\newcommand{\colim}{\text{colim}}
+\newcommand{\mon}[1]{\mathbb{#1}}%Monad
+\newcommand{\EM}[2]{\cat{#1}^{\mon{#2}}}%Eilenberg-Moore Category
+\newcommand{\dom}{\text{dom }}
+\newcommand{\cod}{\text{cod }}
+\newcommand{\Cov}{\text{\rm Cov }}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{document}
+
+	
+	\begin{frame}
+	
+		\maketitle
+		\begin{columns}[t]
+		
+			\begin{column}{.32\linewidth}
+				
+				
+				\begin{block}{Classical Galois theorem of fields}
+					The classical theorem of Galois states that for finite dimensional field extensions $L/K$ where for each element of $L$ the minimal polynomial in $K[x]$ exists and factors into distinct linear factors over $L$, we get the following isomorphism of posets
+					\begin{align*}
+						\{M\;\vert\; L\supseteq M\supseteq K\} \isomorph \{G\;\vert\;G\le \Gal (L/K) \}
+					\end{align*}
+				established by antitone maps $\Fix{-}$ and $\Gal(L/-)$. The theorem also states that $\dim L/K = \abs{\Gal{(L/K)}}$. This theorem is used crucially in order to prove that $n^{\text{th}}$ degree general polynomial has Galois group as $S_n$. This combined with the unsolvability of $S_n$ for $n\ge 5$ yields unsolvability of quintic polynomials, also known as Abel-Ruffini theorem.\\
+				
+				The general idea of Galois theory is to study an object by it's automorphism group. Here the objects are field extensions. Grothendieck around 1960s, motivated by a similar theorem in the topological setting with fundamental group, developed a far reaching generalization of the aforementioned theorem to a setting which allows to give \textit{Galois like} theorems about other algebraic objects, like finite dimensional commutative $K$-algebras with 1. 
+				\end{block}
+				
+				\begin{block}{Galois theorem for commutative algebras}
+					Let $L/K$ be a finite dimensional Galois field extension. A $K$-algebra $A$ is said to be split by $L$ if the minimal polynomial of each element of $A$ is linearly factored into distinct roots over $L$. Let $\cat{Split}_K(L)_{\fin}$ denote all finite dimensional commutative $K$-algebras split by $L$, which is a full subcategory of $K-\cat{Alg}$, and let $ \Gal{(L/K)}-\cat{Set}_{\fin} $ denote all finite sets with an action of Galois group $\Gal{(L/K)}$. The Galois theorem of Grothendieck then says that the functor
+					\begin{align*}
+					\homset{K}{-}{L}	: \cat{Split}_K(L)_{\fin}^{\text{op}} \longrightarrow  \Gal{(L/K)}-\cat{Set}_{\fin}
+					\end{align*}
+					establishes a contravariant equivalence between $ \cat{Split}_K(L)_{\fin}$ and $\Gal{(L/K)}-\cat{Set}_{\fin}$.
+				\end{block}
+				\begin{block}{Galois theorem for fields $\hookrightarrow$ Galois theorem for commutative algebras}
+					As uselessly abstract the above theorem might seem, we can rederive the classical Galois theorem for fields from it. Indeed, take any Galois field extension $L/K$ and consider an intermediate extension $K \hookrightarrow M \hookrightarrow L$. 
+					\begin{itemize}
+						\item {By the above contravariant equivalence, we get the following surjection of $\Gal{(L/K)}$ sets
+							\begin{align*}
+								\homset{K}{L}{L} \twoheadrightarrow \homset{K}{M}{L} \twoheadrightarrow \homset{K}{K}{L}.
+						\end{align*}}
+					\item {Now, it turns out that $\homset{K}{L}{L}$ is just the Galois group $\Gal{(L/K)}$ and $\homset{K}{K}{L}$ is a singleton, so the second surjection is trivial. Hence the above diagram further reduces to following in the category of finite $\Gal{(L/K)}$ sets
+						\begin{align*}
+							\Gal{(L/K)} \overset{\phi}{\twoheadrightarrow} \homset{K}{M}{L}.
+					\end{align*}}
+					\item {Hence we have that
+						% https://q.uiver.app/?q=WzAsMixbMCwwLCJcXHtNXFw7XFx2ZXJ0XFw7IEtcXGhvb2tyaWdodGFycm93IE0gXFxob29rcmlnaHRhcnJvdyBMIFxcfSJdLFswLDEsIlxce1FcXDtcXHZlcnRcXDsgXFxHYWx7KEwvSyl9IFxcdHdvaGVhZHJpZ2h0YXJyb3cgUSBcXH0iXSxbMCwxLCJcXGlzb21vcnBoIiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d
+						\[\begin{tikzcd}
+							{\{M\;\vert\; K\hookrightarrow M \hookrightarrow L \}} \\
+							{\{Q\;\vert\; \Gal{(L/K)} \twoheadrightarrow Q \}}
+							\arrow["\isomorph"{description}, draw=none, from=1-1, to=2-1]
+						\end{tikzcd}.\]}
+					\item {	Since for any group $G$, the subgroups of $G$ are in one-to-one correspondence with quotient $G$-sets of the $G$-set $G$, therefore we further get the following equivalence
+						% https://q.uiver.app/?q=WzAsMixbMCwwLCJcXHtNXFw7XFx2ZXJ0XFw7IEtcXGhvb2tyaWdodGFycm93IE0gXFxob29rcmlnaHRhcnJvdyBMIFxcfSJdLFswLDEsIlxce0hcXDtcXHZlcnRcXDsgSFxcbGUgXFxHYWx7KEwvSyl9XFx9Il0sWzAsMSwiXFxpc29tb3JwaCIsMSx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6Im5vbmUifSwiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dXQ==
+						\[\begin{tikzcd}
+							{\{M\;\vert\; K\hookrightarrow M \hookrightarrow L \}} \\
+							{\{H\;\vert\; H\le \Gal{(L/K)}\}}
+							\arrow["\isomorph"{description}, draw=none, from=1-1, to=2-1]
+						\end{tikzcd}.\]}
+					\end{itemize}
+					Hence we have the classical Galois theorem.
+			\end{block}
+				
+			\end{column}
+			%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			
+			\begin{column}{.32\linewidth}
+				
+				\begin{block}{Sketch of a proof}
+					An important part of this proof is to use following result due to Gelfand which characterizes the split $K$-algebras in a lot less \textit{elemental} manner
+					\begin{theorem}[Characterization of split algebras]
+						Let $L/K$ be a field extension with $\dim_KL <\infty $ and let $A$ be a $K$-algebra with $\dim_K A < \infty$. Then, the following are equivalent
+						\begin{itemize}
+							\item {$L$ splits $A$.}
+							\item {$L\tens_K A \isomorph L^{\homset{L}{L\tens_K A}{L}} \isomorph L^{\homset{K}{A}{L}}$.}
+							\item {$L\tens_K A \isomorph L^{\dim_K A}$.}
+							\item {$\abs{\homset{K}{A}{L}} = \abs{\homset{L}{L\tens_KA}{L}} = \dim_KA$.}
+						\end{itemize}
+					\end{theorem}
+					Using the above theorem, the main ideas of the proof are as follows.	
+					\begin{itemize}
+						\item {In order to check that $\homset{K}{-}{L}$ is full, one would need to produce a $\xi : A\to B$ for a $\varphi : \homset{K}{B}{L} \to \homset{K}{A}{L}$. This one can do from following observations.
+							\begin{enumerate}
+								\item {If $A$ is split by $L$, then $L^{\homset{K}{A}{L}}$ is a $\Gal{(L/K)}$-set.}
+								\item {If $A$ is split by $L$, then $A\isomorph \Fix{L\tens_K A} = \{x\in L\tens_KA\;\vert\; g\tens \id (x)  = x \;\forall g\in \Gal{(L/K)}\}.$}
+							\end{enumerate}	
+						Indeed, the natural choice for $\xi$ then is the following 
+						\begin{figure}
+							\centering
+							\includegraphics[width=0.4\linewidth]{1}
+						\end{figure}
+					}
+					\item {In order to check the essential surjectivity of $\homset{K}{-}{L}$, for any finite $\Gal{(L/K)}$-set $X$, we have to obtain a $K$-algebra $A$ split by $L$ such that $\dim_KA < \infty$ and $\homset{K}{A}{L} \isomorph A$. This will follow from the following observations.
+						\begin{enumerate}
+							\item {For any group $G$ and a finite $G$-set $X$,
+								\begin{align*}
+									X \isomorph \coprod_{i=1}^{n} Q_i
+								\end{align*}	
+							where $Q_i$ are quotient $G$-sets of $G$-set $G$.
+						}
+							\item {For any two $K$-algebras $A,B$ split by $L$, we have
+							\begin{align*}
+								\homset{K}{A\times B}{L} \isomorph \homset{K}{A}{L} \amalg \homset{K}{B}{L}
+							\end{align*}	
+							in $\Gal{(L/K)}-\cat{Set}_{\fin}$.
+						}
+							\item {In $\Gal{(L/K)}-\cat{Set}_{\fin}$, if $Q$ is a quotient $\Gal{(L/K)}$-set of $\Gal{(L/K)}$, then there exists a $K$-algebra $A$ split by $L$ such that 
+								\begin{align*}
+									\homset{K}{A}{L} \isomorph Q.
+								\end{align*}
+						}
+						\end{enumerate}	
+						With these three observations, the essential surjectivity of $\homset{K}{-}{L}$ now follows.
+				}
+					\end{itemize}
+					
+				\end{block}
+			
+			
+			
+%		\begin{block}{First split block}
+%				\setbeamercolor{background canvas}{bg=white}
+%			\begin{columns}
+%				\begin{column}{0.5\linewidth}
+%					
+%					\begin{center}
+%						\begin{figure}
+%							\includegraphics[width=0.55\linewidth]{example-image-b}
+%							\caption{Second figure caption}
+%						\end{figure}
+%					\end{center}
+%					\begin{center}
+%						\begin{figure}
+%							\includegraphics[width=0.55\linewidth]{example-image-c}
+%							\caption{Third figure caption}
+%						\end{figure}
+%					\end{center}
+%					
+%				\end{column}
+%				
+%				\begin{column}{0.5\linewidth}
+%					
+%					Morbi blandit ligula feugiat magna.
+%					\begin{itemize}
+%						\item Nunc eleifend consequat lorem.
+%						\item Sed lacinia nulla vitae enim.
+%						\item Pellentesque tincidunt purus vel magna.
+%						\item Integer non enim.
+%						\item Praesent euismod nunc eu purus.
+%						\item Donec bibendum quam in tellus.
+%						\item Nullam cursus pulvinar lectus.
+%						\item Donec et mi.
+%						\item Nam vulputate metus eu enim.
+%						\item Vestibulum pellentesque felis eu massa.
+%					\end{itemize}
+%					
+%				\end{column}
+%			\end{columns}
+%			
+%		\end{block}
+		
+		
+%		\begin{block}{First tikz picture}
+%			Morbi blandit ligula feugiat magna. Nunc eleifend consequat lorem. Sed lacinia nulla vitae enim. Pellentesque
+%			tincidunt purus vel magna.
+%			
+%			\begin{center}
+%				\begin{figure}
+%					
+%					\begin{tikzpicture}
+%						
+%						% Definitions
+%						\pgfmathsetmacro{\b}{75}
+%						\pgfmathsetmacro{\a}{15}
+%						\pgfmathsetmacro{\R}{2}
+%						\pgfmathsetmacro{\r}{1}
+%						\pgfmathsetmacro{\P}{\R*tan(\b)}
+%						\pgfmathsetmacro{\Q}{\R/cos(\b)}
+%						\pgfmathsetmacro{\p}{\r/tan(\a)}
+%						\pgfmathsetmacro{\q}{\r/sin(\a)}
+%						
+%						% Pulleys
+%						
+%						% big pulley
+%						\draw (0,0) circle (\R) ;
+%						\fill[left color=gray!80, right color=gray!60, middle
+%						color=white] (0,0) circle (\R) ;
+%						\draw[thick, white] (0,0) circle (.8*\R);
+%						\shade[ball color=white] (0,0) circle (.3) node[left,xshift=-5] {$P$};
+%						
+%						% small pulley
+%						\draw (\Q+\q-.3, 0) circle (\r);
+%						\fill[left color=gray!80, right color=gray!60, middle
+%						color=white] (\Q+\q-.3, 0) circle (\r) ;
+%						\draw[thick, white] (\Q+\q-.3,0) circle (.8*\r);
+%						\shade[ball color=white] (\Q+\q-.3,0) circle (.15) 
+%						node[right, xshift=2] {$Q$};
+%						
+%						% belt and point labels
+%						\begin{scope}[ultra thick]
+%							\draw (\b:\R) arc (\b:360-\b:\R) ;
+%							\draw (\b:\R) -- ( \P, 0 ); 
+%							\draw (-\b:\R) -- ( \P, 0 );
+%							\draw (\Q-.3,0) -- + (\a:\p)  arc (105:-105:\r) ;
+%							\draw (\Q-.3,0) -- + (-\a:\p);
+%							%\draw (\b:\R) arc (\b:360-\b:\r) ;
+%						\end{scope}
+%						
+%						\draw (0,0) -- (\b:\R) node[midway, above,sloped] {$R$} node[above] {$A$};
+%						\draw (-\b:\R)--(0,0) ;
+%						\draw (\Q+\q-.3,0) -- +(105:\r) node[midway,above, sloped] {$r$}
+%						node[above] {$E$};
+%						\draw (\Q+\q-.3,0) -- +(-105:\r) node[below] {$D$};
+%						\node[below] at (-\b:\R) {$B$};
+%						\node[below] at (\Q-.3,0) {$C$};
+%						
+%						% center line
+%						\draw[dash pattern=on5pt off3pt] (0,0) -- (\Q+\q-.3,0);
+%						
+%						% angle label
+%						\node[fill=white] at (0.73*\Q, 0) {$\theta$} ;
+%						\draw (\Q-1.8,0) arc (180:195:1.5);
+%						\draw (\Q-1.8,0) arc (180:165:1.5);
+%						
+%					\end{tikzpicture}
+%					\caption{First tikz picture caption}
+%				\end{figure}
+%			\end{center}
+%			
+%			Donec bibendum quam in tellus. Nullam cursus pulvinar lectus. Donec et mi. Nam vulputate metus eu enim. Vestibulum pellentesque felis eu massa.
+%		\end{block}
+		\begin{block}{Example : {The $K$-algebra $K[x]/\gen{p(x)}$}}
+			Pick any field extension $L/K$ and a polynomial $p(x) \in K[x]$ which is the minimal polynomial of some $a\in L$. One always has the following bijection (Proposition 2.2.5, \cite{GT})
+				\begin{align*}
+					\homset{K}{\frac{K[x]}{\gen{p(x)}}}{L} \isomorph \{l\in L\;\vert\; p(l)  = 0 \text{ in L}\} = V_L(p(x)).
+				\end{align*}
+			Note that $K[x]/\gen{p(x)} $ is a finite dimensional commutative $K$-algebra, where $\dim_K K[x]/\gen{p(x)}  = \deg p(x)$. If $L$ is a finite dimensional Galois extension of $K$, then by extension of scalars, we have
+			\begin{align*}
+				L\tens_K \frac{K[x]}{\gen{p(x)}} \isomorph \frac{L[x]}{\gen{p(x)}}.
+			\end{align*}
+			Since $\abs{\homset{L}{\frac{L[x]}{\gen{p(x)}}}{L} } = \abs{V_L(p(x))} = \deg p(x)$. Hence $L$ splits $K[x]/\gen{p(x)}$ and as is clear, we have the finite $\Gal{(L/K)}$-set $\homset{K}{K[x]/\gen{p(x)}}{L}$.
+		\end{block}
+	\end{column}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{column}{.32\linewidth}
+
+\begin{block}{The Galois phenomenology}
+	In a first course in algebraic topology, one usually learns a very powerful theorem about classification of covering spaces. If $X$ is a path-connected and semi-locally simply connected space, then we have the following isomorphism of posets
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.9\linewidth]{2}
+	\end{figure}
+	But with a little bit of exploring one sees the following stronger equivalence
+	\begin{theorem}[Galois theorem of covering spaces]
+		Let $X$ be a connected and locally simply connected space, $\cat{Cov }(X)$ be the category of covering spaces over $X$ and $\pi_1(X)-\cat{Set}$ be the category of all sets with an action of $\pi_1(X)$. Then, there is an equivalence of categories
+		\begin{align*}
+			\cat{Cov }(X) \equiv \pi_1(X)-\cat{Set}
+		\end{align*} 
+		given by $p\mapsto p^{-1}(x)$ where $x$ is the base point of $X$.
+	\end{theorem}
+	\begin{itemize}
+		\item {Moreover, one can get back the above isomorphism from the aforementioned theorem by restricting the above equivalence to the $\pi_1(X)$ sets obtained by identifying all subgroups of $\pi_1(X)$ conjugate to each other. }
+		\item {Just like classical Galois theory of fields, the above correspondence is equally usable in topology, using which we can classify, for example, all connected coverings of $\mathbb{RP}^{n}$.}
+		\item {One then wonders how this topological and algebraic pictures are related to each other. Indeed, the work of Grothendieck, which led to the generalization of Galois theory to commutative $K$-algebras, was not limited to just this, as the setting of work in which he stated his general Galois theorem was of schemes, and it is in this language do both algebraic and topological pictures of the Galois theory come together. For more information, see \cite{GToS}.}
+		\item {Another way of understanding the source of this phenomenon is to abstractly characterize those categories where there might be an \textit{inherent} Galois theorem. Indeed this is what is done in Chapter 5 of \cite{GT}.}
+	\end{itemize}
+\end{block}     
+	\begin{block}{References}
+			\begin{thebibliography}{1}
+			\bibliographystyle{alpha}
+			\bibitem[BJ01]{GT} 
+			F. Borceux, G. Janelidze, Galois Theories, Camb. Stud. Adv. Math. 72, Cambridge: Cambridge University Press (2001).
+			\bibitem[Len08]{GToS}
+			H.W. Lenstra, Galois theory for schemes, available online at https://websites.math.leidenuniv.nl/algebra/GSchemes.pdf (2008).
+		\end{thebibliography}
+	\end{block}
+
+%\begin{block}{First table}
+%	\begin{center}
+%		\begin{tabular}{lrrrrrr}
+%			\hline
+%			& AAA & BBB & CCC & DDD & EEE & FFF\\ \hline
+%			XXX & 1 & 2 & 3 & 4 & 5 & 6 \\
+%			YYY & 1 & 2 & 3 & 4 & 5 & 6 \\
+%			ZZZ & 1 & 2 & 3 & 4 & 5 & 6 \\
+%			
+%			\hline
+%		\end{tabular}
+%		
+%	\end{center}
+%\end{block}
+%
+%\begin{block}{First plot}
+%	\begin{center}
+%		\begin{figure}
+%			
+%			\begin{tikzpicture}
+%				\begin{axis}[
+%					width=0.7\linewidth,
+%					max space between ticks=50,
+%					minor x tick num=2,
+%					minor y tick num=1,
+%					tick style={semithick,color=black},
+%					xlabel=Value,
+%					ylabel=Time (sec),
+%					xtick={0, 50, 100, 150},
+%					ytick={0, 2, 4, 6, 8}]
+%					
+%					\addplot[smooth, blue, mark=*] coordinates { (1,1.48) (2,1.48) (4,1.48) (8,1.48) (16,1.49) (32,1.49) (64,1.49) (128,1.85) (136,5.87) (138,6.84) (139,7.46)};
+%				\end{axis}
+%			\end{tikzpicture}
+%			
+%			
+%			\caption{First plot caption}
+%		\end{figure}
+%	\end{center}
+%\end{block}
+%
+%\begin{block}{Third paragraph}
+%	Mauris tempor ligula sed lacus. Duis cursus enim ut augue. Cras ac magna. Cras nulla. Nulla egestas. Curabitur a leo. Quisque egestas wisi eget nunc.
+%\end{block}
+%
+%\begin{block}{Third list}
+%	\begin{enumerate}
+%		\item Nam feugiat lacus vel est.
+%		\item Curabitur consectetuer.
+%	\end{enumerate}
+%	
+%\end{block}
+
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\end{document}
